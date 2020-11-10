@@ -1,13 +1,12 @@
 #!/usr/bin/groovy
 def call() {
-    node('Slave1') {
-
+    node('master') {
         stage('Checkout') {
             checkout scm
         }
         def config = pipelineConfig()
 
-        stage('Prerequistes'){
+        stage('Prerequistes') {
             serviceName = sh (
                     script: "echo ${config.SERVICE_NAME}|cut -d '-' -f 1",
                     returnStdout: true
@@ -15,7 +14,7 @@ def call() {
         }
 
         stage('Build & Test') {
-                sh "mvn --version"
+                sh 'mvn --version'
                 sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
         }
 
@@ -30,6 +29,6 @@ def call() {
             echo "We are going to deploy ${p.SERVICE_NAME}"
             sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
             sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
-            }
         }
+    }
 }
