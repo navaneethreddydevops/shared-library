@@ -4,6 +4,7 @@ def call() {
         stage('Checkout') {
             checkout scm
         }
+        /* groovylint-disable-next-line VariableTypeRequired */
         def config = pipelineConfig()
 
         stage('Prerequistes') {

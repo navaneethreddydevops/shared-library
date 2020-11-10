@@ -3,6 +3,9 @@
     "rules": {
         "MethodReturnTypeRequired": {
             "enabled": false
+        },
+        "NoDef": {
+            "enabled": false
         }
     }
 }
