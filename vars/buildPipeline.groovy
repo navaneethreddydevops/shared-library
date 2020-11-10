@@ -1,5 +1,35 @@
 #!/usr/bin/groovy
 def call() {
-    Map pipelineConfig = readYaml(file: "${WORKSPACE}/pipeline.yaml")
-    return pipelineConfig
+    node('Slave1') {
+
+        stage('Checkout') {
+            checkout scm
+        }
+        def config = pipelineConfig()
+
+        stage('Prerequistes'){
+            serviceName = sh (
+                    script: "echo ${config.SERVICE_NAME}|cut -d '-' -f 1",
+                    returnStdout: true
+                ).trim()
+        }
+
+        stage('Build & Test') {
+                sh "mvn --version"
+                sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
+        }
+
+        stage ('Push Docker Image') {
+            docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
+                sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
+                sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
+            }
+        }
+
+        stage ('Deploy') {
+            echo "We are going to deploy ${p.SERVICE_NAME}"
+            sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
+            sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
+            }
+        }
 }
