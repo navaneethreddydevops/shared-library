@@ -15,7 +15,7 @@ def call() {
         }
         stage('Build & Test') {
                 sh 'mvn --version'
-                sh 'cd cicd'
+                sh 'cd cicd/'
                 sh 'ls -lrt'
                 sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
         }
