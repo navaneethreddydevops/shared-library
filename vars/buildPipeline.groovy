@@ -15,7 +15,8 @@ def call() {
         }
         stage('ChangeDir') {
             /* groovylint-disable-next-line GStringExpressionWithinString */
-            sh 'cd ${env.WORKSPACE}/cicd/'
+            sh 'ls -lrt'
+            sh 'cd cicd/'
         }
         stage('Build & Test') {
                 sh 'mvn --version'
