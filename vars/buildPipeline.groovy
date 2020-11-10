@@ -16,6 +16,7 @@ def call() {
         stage('Build & Test') {
                 sh 'cd cicd'
                 sh 'mvn --version'
+                sh 'ls -lrt'
                 sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
         }
         stage ('Push Docker Image') {
