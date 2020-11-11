@@ -23,10 +23,7 @@ def call() {
             stage('Prerequistes') {
                 steps {
                     script {
-                        serviceName = sh (
-                    steps: "echo ${config.SERVICE_NAME}|cut -d '-' -f 1",
-                    returnStdout: true
-                ).trim()
+                        sh 'echo "Hello"'
                     }
                 }
             }
