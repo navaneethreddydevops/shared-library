@@ -6,6 +6,9 @@
         },
         "NoDef": {
             "enabled": false
+        },
+        "VariableTypeRequired": {
+            "enabled": false
         }
     }
 }

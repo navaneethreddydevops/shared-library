@@ -1,5 +1,6 @@
 #!/usr/bin/groovy
 def call() {
+    def config
     pipeline {
         agent {
             label ('master')
@@ -13,9 +14,10 @@ def call() {
         stages {
             stage('Checkout') {
                 steps {
-                    checkout scm
-                    /* groovylint-disable-next-line VariableTypeRequired */
-                    def config = pipelineConfig()
+                    script {
+                        checkout scm
+                        config = pipelineConfig()
+                    }
                 }
             }
             stage('Prerequistes') {
@@ -30,15 +32,19 @@ def call() {
             }
             stage('ChangeDir') {
                 steps {
-                    sh 'ls -lrt'
-                    sh 'cd cicd/'
+                    script {
+                        sh 'ls -lrt'
+                        sh 'cd cicd/'
+                    }
                 }
             }
             stage('Build & Test') {
                 steps {
-                    sh 'mvn --version'
-                    sh 'ls -lrt'
-                    sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
+                    script {
+                        sh 'mvn --version'
+                        sh 'ls -lrt'
+                        sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
+                    }
                 }
             }
             stage ('Push Docker Image') {
@@ -53,9 +59,11 @@ def call() {
             }
             stage ('Deploy') {
                 steps {
-                    echo "We are going to deploy ${p.SERVICE_NAME}"
-                    sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
-                    sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
+                    script {
+                        echo "We are going to deploy ${p.SERVICE_NAME}"
+                        sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
+                        sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
+                    }
                 }
             }
         }
