@@ -6,11 +6,14 @@ def call() {
             label ('master')
         }
         options {
+            timeout(time: 1, unit: 'HOURS')
             buildDiscarder (logRotator(numToKeepStr: '10'))
-            cleanBeforeCheckout()
         }
         parameters {
-            string (name : 'environment', defaultValue: 'dev')
+            choice (name: 'environment', choices: ['dev', 'qa', 'prod'], description: 'Environment')
+            string (name : 'app', defaultValue: 'java')
+            string (name: 'buildNumber', defaultValue: '', description: 'Imagine like 10 parameters here')
+            string (name: 'numToKeep', defaultValue:)
         }
         stages {
             stage('Checkout') {
@@ -32,8 +35,7 @@ def call() {
             stage('ChangeDir') {
                 steps {
                     script {
-                        sh 'ls -lrt'
-                        sh 'cd cicd/'
+                        sh 'echo "Hello2"'
                     }
                 }
             }
