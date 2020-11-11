@@ -7,6 +7,7 @@ def call() {
         }
         options {
             buildDiscarder (logRotator(numToKeepStr: '10'))
+            cleanBeforeCheckout()
         }
         parameters {
             string (name : 'environment', defaultValue: 'dev')
@@ -17,7 +18,7 @@ def call() {
                     script {
                         checkout scm
                         config = pipelineConfig()
-                        println 'config yaml:' + config
+                        println 'Properties from App Repo:' + config
                     }
                 }
             }
