@@ -17,6 +17,7 @@ def call() {
                     script {
                         checkout scm
                         config = pipelineConfig()
+                        println 'config yaml:' + config
                     }
                 }
             }
