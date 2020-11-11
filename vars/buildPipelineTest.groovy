@@ -12,35 +12,35 @@ def call() {
         }
         stages {
             stage('Checkout') {
-                script {
+                steps {
                     checkout scm
                 }
             }
             /* groovylint-disable-next-line VariableTypeRequired */
             def config = pipelineConfig()
             stage('Prerequistes') {
-                script {
+                steps {
                     serviceName = sh (
-                    script: "echo ${config.SERVICE_NAME}|cut -d '-' -f 1",
+                    steps: "echo ${config.SERVICE_NAME}|cut -d '-' -f 1",
                     returnStdout: true
                 ).trim()
                 }
             }
             stage('ChangeDir') {
-                script {
+                steps {
                     sh 'ls -lrt'
                     sh 'cd cicd/'
                 }
             }
             stage('Build & Test') {
-                script {
+                steps {
                     sh 'mvn --version'
                     sh 'ls -lrt'
                     sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
                 }
             }
             stage ('Push Docker Image') {
-                script {
+                steps {
                     docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
                         sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
                         sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
@@ -48,7 +48,7 @@ def call() {
                 }
             }
             stage ('Deploy') {
-                script {
+                steps {
                     echo "We are going to deploy ${p.SERVICE_NAME}"
                     sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
                     sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
