@@ -14,16 +14,18 @@ def call() {
             stage('Checkout') {
                 steps {
                     checkout scm
+                    /* groovylint-disable-next-line VariableTypeRequired */
+                    def config = pipelineConfig()
                 }
             }
-            /* groovylint-disable-next-line VariableTypeRequired */
-            def config = pipelineConfig()
             stage('Prerequistes') {
                 steps {
-                    serviceName = sh (
+                    script {
+                        serviceName = sh (
                     steps: "echo ${config.SERVICE_NAME}|cut -d '-' -f 1",
                     returnStdout: true
                 ).trim()
+                    }
                 }
             }
             stage('ChangeDir') {
@@ -41,9 +43,11 @@ def call() {
             }
             stage ('Push Docker Image') {
                 steps {
-                    docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
-                        sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
-                        sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
+                    script {
+                        docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
+                            sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
+                            sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
+                        }
                     }
                 }
             }
