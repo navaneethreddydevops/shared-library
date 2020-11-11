@@ -35,7 +35,7 @@ def call() {
                     script {
                         checkout scm
                         config = pipelineConfig()
-                        println 'Properties from App Repo and pipeline properties:' + config + params
+                        println 'Properties from App Repo :' + config 'Pipeline params'+ params
                     }
                 }
             }
