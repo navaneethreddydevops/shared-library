@@ -13,7 +13,6 @@ def call() {
             choice (name: 'environment', choices: ['dev', 'qa', 'prod'], description: 'Environment')
             string (name : 'app', defaultValue: 'java')
             string (name: 'buildNumber', defaultValue: '', description: 'Imagine like 10 parameters here')
-            string (name: 'numToKeep', defaultValue:)
         }
         stages {
             stage('Checkout') {
