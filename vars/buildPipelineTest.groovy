@@ -1,11 +1,13 @@
 #!/usr/bin/groovy
 def call() {
     def config
+    currentBuild.result = 'SUCCESS'
     pipeline {
         agent {
             label ('master')
         }
         options {
+            parallelsAlwaysFailFast()
             timeout(time: 1, unit: 'HOURS')
             buildDiscarder (logRotator(numToKeepStr: '10'))
         }
@@ -15,6 +17,19 @@ def call() {
             string (name: 'buildNumber', defaultValue: '', description: 'Imagine like 10 parameters here')
         }
         stages {
+            stage('ParameterCheck') {
+                steps {
+                    script {
+                        if (
+                        (params.environment == 'null' || params.environment.trim() == '')
+                        || (params.environment == 'true' && params.app == '')
+                        ) {
+                            currentBuild.result = 'ABORTED'
+                            error('Prameters not provided properly')
+                        }
+                    }
+                }
+            }
             stage('Checkout') {
                 steps {
                     script {
