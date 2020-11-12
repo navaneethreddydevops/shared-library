@@ -39,8 +39,8 @@ def call() {
                         checkout scm
                         config = pipelineConfig()
                         println 'Properties from App Repo :' + config + params
-                        plugins = pulgins()
-                        println 'Plugins of jenkins' + 
+                        Plugins = pulgins()
+                        println 'Plugins of jenkins:' + Plugins
                     }
                 }
             }
