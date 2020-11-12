@@ -7,6 +7,9 @@
         "NoDef": {
             "enabled": false
         },
+        "VariableName": {
+            "enabled": false
+        },
         "VariableTypeRequired": {
             "enabled": false
         }
