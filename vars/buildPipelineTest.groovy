@@ -1,6 +1,5 @@
 #!/usr/bin/groovy
 /* groovylint-disable LineLength */
-import com.utils
 
 def call() {
     def config
