@@ -1,4 +1,5 @@
 #!/usr/bin/groovy
+/* groovylint-disable LineLength */
 def call() {
     def config
     currentBuild.result = 'SUCCESS'
@@ -12,9 +13,9 @@ def call() {
             buildDiscarder (logRotator(numToKeepStr: '10'))
         }
         parameters {
-            choice (name: 'environment', choices: ['dev', 'qa', 'prod'], description: 'Environment')
-            string (name : 'app', defaultValue: 'java')
-            string (name: 'buildNumber', defaultValue: '', description: 'Imagine like 10 parameters here')
+            choice (name: 'Environment', choices: ['MyCustomCloudDev', 'MyCustomCloudQA', 'MyCustomCloudProd'], description: 'Environment')
+            choice (name: 'Region', choices: ['us-east-1', 'us-west-2', 'eu-west-2', 'ap-southeast-2'], description: 'RegionToDeploy')
+            choice (name: 'app', choices: ['Java', 'Python', 'Terraform', 'Docker', 'Helm', 'Cloudformation', 'Lambda'], description: 'BuildType')
         }
         stages {
             stage('ParameterCheck') {
