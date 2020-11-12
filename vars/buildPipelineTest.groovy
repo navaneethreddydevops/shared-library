@@ -1,5 +1,7 @@
 #!/usr/bin/groovy
 /* groovylint-disable LineLength */
+import com.utils.config
+
 def call() {
     def config
     currentBuild.result = 'SUCCESS'
