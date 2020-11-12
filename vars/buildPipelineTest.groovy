@@ -22,8 +22,8 @@ def call() {
                 steps {
                     script {
                         if (
-                        (params.environment == 'null' || params.environment.trim() == '')
-                        || (params.environment == 'true' && params.app == '')
+                        (params.Environment == 'null' || params.Region == 'null')
+                        || (params.app == 'null' && params.app == '')
                         ) {
                             currentBuild.result = 'ABORTED'
                             error('Prameters not provided properly')
