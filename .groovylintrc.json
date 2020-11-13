@@ -7,6 +7,9 @@
         "MethodReturnTypeRequired": {
             "enabled": false
         },
+        "NglParseError": {
+            "enabled": false
+        },
         "NoDef": {
             "enabled": false
         },
