@@ -1,9 +1,9 @@
 def call() {
-    def podLabel = "slave-${UUID.randomUUID().toString()}"
-    pipeline {
+  def podLabel = "slave-${UUID.randomUUID().toString()}"
+  pipeline {
         agent {
-            kubernetes {
-                yaml '''
+      kubernetes {
+        yaml '''
 apiVersion: v1
 kind: Pod
 metadata:
@@ -60,34 +60,34 @@ spec:
       hostPath:
         path: /root/.m2
 '''
-            }
+      }
         }
-    }
-    options {
+  }
+  options {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
-        disableConcurrentBuilds(logRotator(numToKeepStr: '')))
-    }
-    triggers{
+        disableConcurrentBuilds(logRotator(numToKeepStr: ''))
+  }
+  triggers {
         pollSCM('H/1 * * * * ')
-    }
-    parameters{
-        choices (name: 'Environment', choices:'',description:'Deployment Environment')
-        choice(name:'awsRegion',choices:['us-east-1','us-west-1'],description:'AWS Region')
-    }
-    stages{
-        stage('Git Checkout'){
-            container('jnlp'){
-                script{
-                    res
-                }
-            }
+  }
+  parameters {
+        choices (name: 'Environment', choices:'', description:'Deployment Environment')
+        choice(name:'awsRegion', choices:['us-east-1', 'us-west-1'], description:'AWS Region')
+  }
+  stages {
+        stage('Git Checkout') {
+      container('jnlp') {
+        script {
+          echo 'Running inside docker'
         }
-        stage('Build'){
-            container('aws'){
-                script{
-                    res
-                }
-            }
+      }
         }
-    }
+        stage('Build') {
+      container('aws') {
+        script {
+          echo 'Running inside docker'
+        }
+      }
+        }
+  }
 }
