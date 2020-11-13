@@ -2,6 +2,7 @@ import groovy.json.*
 import jenkins.model.*
 
 node('master'){
+    stages{
     stage(Clone){
         sh 'git clone https://github.com/navaneethreddydevops/shared-library.git'
         sh 'git clean -dfx'
@@ -13,5 +14,6 @@ node('master'){
             removeJobAction: 'DELETE',
             targets: 'Jenkins.dsl,/*.dsl'
         )
+    }
     }
 }
