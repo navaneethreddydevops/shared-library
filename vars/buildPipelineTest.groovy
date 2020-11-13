@@ -44,11 +44,9 @@ def call() {
             stage('Prerequistes') {
                 steps {
                     script {
-                        sh '
-                        which java
-                        which terraform
-                        which docker
-                        '
+                        sh 'which java'
+                        sh 'which terraform'
+                        sh 'which docker'
                     }
                 }
             }
