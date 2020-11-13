@@ -49,10 +49,10 @@ def call() {
                     }
                 }
             }
-            stage('ChangeDir') {
+            stage('DockerCleanUp') {
                 steps {
                     script {
-                        sh 'echo "Hello2"'
+                        DockerClean()
                     }
                 }
             }
