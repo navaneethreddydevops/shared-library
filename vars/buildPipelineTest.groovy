@@ -45,7 +45,6 @@ def call() {
                 steps {
                     script {
                         sh 'which java'
-                        sh 'which terraform'
                         sh 'which docker'
                     }
                 }
