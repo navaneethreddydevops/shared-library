@@ -44,7 +44,11 @@ def call() {
             stage('Prerequistes') {
                 steps {
                     script {
-                        sh 'echo "Hello"'
+                        sh '
+                        which java
+                        which terraform
+                        which docker
+                        '
                     }
                 }
             }
@@ -55,15 +59,15 @@ def call() {
                     }
                 }
             }
-            stage('Build & Test') {
-                steps {
-                    script {
-                        sh 'mvn --version'
-                        sh 'ls -lrt'
-                        sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
-                    }
-                }
-            }
+            // stage('Build & Test') {
+            //     steps {
+            //         script {
+            //             sh 'mvn --version'
+            //             sh 'ls -lrt'
+            //             sh "mvn -Ddb_port=${config.DB_PORT} -Dredis_port=${config.REDIS_PORT} clean install"
+            //         }
+            //     }
+            // }
             stage ('Push Docker Image') {
                 steps {
                     script {
