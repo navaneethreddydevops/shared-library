@@ -56,7 +56,7 @@ def call() {
                     }
                 }
             }
-            stage('DockerCleanUp') {
+            stage('DockerBuildPush') {
                 steps {
                     script {
                         dockerbuildPipeline()
