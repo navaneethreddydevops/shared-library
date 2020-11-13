@@ -1,5 +1,6 @@
 #!/usr/bin/groovy
 def call() {
+    sh 'echo "started executing this method"'
     script {
         def dockerFileStr = ''
         echo ''
