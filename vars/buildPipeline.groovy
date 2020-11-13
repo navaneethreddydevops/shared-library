@@ -52,7 +52,7 @@ def call() {
             stage('DockerCleanUp') {
                 steps {
                     script {
-                        DockerClean()
+                        dockerClean()
                     }
                 }
             }
