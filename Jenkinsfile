@@ -2,7 +2,7 @@ import groovy.json.*
 import jenkins.model.*
 
 node('master'){
-    stage(GitCheckout){
+    stage(Clone){
         sh 'git clone https://github.com/navaneethreddydevops/shared-library.git'
         sh 'git clean -dfx'
     }
