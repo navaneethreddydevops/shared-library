@@ -1,8 +1,7 @@
 import groovy.json.*
 import jenkins.model.*
-
+pipeline{
 node('master'){
-    pipeline{
     stages{
     stage(Clone){
         sh 'git clone https://github.com/navaneethreddydevops/shared-library.git'
