@@ -68,7 +68,7 @@ def call() {
             stage('Sonarqube') {
                 steps {
                     script {
-                        withSonarQubeEnv('SonarQube Server') {
+                        withSonarQubeEnv('sonar') {
                         println ${ env.SONAR_HOST_URL }
                         }
                     }
