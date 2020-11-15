@@ -70,7 +70,7 @@ def call() {
                 sh 'mvn clean'
             }
         }
-        stage('clean') {
+        stage('package') {
             steps {
                 sh 'mvn package'
             }
