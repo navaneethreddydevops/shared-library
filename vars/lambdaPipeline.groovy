@@ -1,26 +1,30 @@
 def bucket = 'deployment-packages-mlabouardy'
-def functionName = 'Fibonacci'
-def region = 'eu-west-3'
+def functionName = 'emr-cicd'
+def region = 'us-east-1'
+def commitID() {
+    sh 'git rev-parse HEAD > .git/commitID'
+    def commitID = readFile('.git/commitID').trim()
+    sh 'rm .git/commitID'
+    commitID
+}
 
-node('slaves') {
+node('master') {
     stage('Checkout') {
         checkout scm
     }
 
-    stage('Test') {
-        sh 'go get -u github.com/golang/lint/golint'
-        sh 'go get -t ./...'
-        sh 'golint -set_exit_status'
-        sh 'go vet .'
-        sh 'go test .'
+    stage('Virtualenv') {
+        sh '''
+        virtualenv lambda
+        source lambda/bin/activate
+        pip3 install -r requirements
+        deactivate
+        cd lambda/lib/python3.8/site-packages
+        zip -r my-deployment-package.zip .
+        zip -g my-deployment-package.zip lambda_function.py
+        '''
     }
-
-    stage('Build') {
-        sh 'GOOS=linux go build -o main main.go'
-        sh "zip ${commitID()}.zip main"
-    }
-
-    stage('Push') {
+    stage('Publish') {
         sh "aws s3 cp ${commitID()}.zip s3://${bucket}"
     }
 
@@ -42,9 +46,3 @@ node('slaves') {
     }
 }
 
-def commitID() {
-    sh 'git rev-parse HEAD > .git/commitID'
-    def commitID = readFile('.git/commitID').trim()
-    sh 'rm .git/commitID'
-    commitID
-}
