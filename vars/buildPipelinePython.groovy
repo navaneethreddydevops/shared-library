@@ -108,31 +108,49 @@ def call() {
             //         }
             //     }
             // }
-            stage('Unit tests') {
+        //     stage('Unit tests') {
+        //     steps {
+        //         sh  '''
+        //             python3 -m pytest --verbose --junit-xml reports/unit_tests.xml
+        //             '''
+        //     }
+        //     post {
+        //         always {
+        //             // Archive unit tests for the future
+        //             junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+        //             }
+        //         }
+        //     }
+        //     stage('Acceptance tests') {
+        //     steps {
+        //         sh  '''
+        //             behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
+        //             '''
+        //     }
+        //     post {
+        //         always {
+        //             cucumber (buildStatus: 'SUCCESS',
+        //             fileIncludePattern: '**/*.json',
+        //             jsonReportDirectory: './reports/',
+        //             sortingMethod: 'ALPHABETICAL')
+        //         }
+        //     }
+        // }
+        stage('Build package') {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
             steps {
                 sh  '''
-                    python3 -m pytest --verbose --junit-xml reports/unit_tests.xml
+                    python3 setup.py bdist_wheel
                     '''
             }
             post {
                 always {
                     // Archive unit tests for the future
-                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
-                    }
-                }
-            }
-            stage('Acceptance tests') {
-            steps {
-                sh  '''
-                    behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
-                    '''
-            }
-            post {
-                always {
-                    cucumber (buildStatus: 'SUCCESS',
-                    fileIncludePattern: '**/*.json',
-                    jsonReportDirectory: './reports/',
-                    sortingMethod: 'ALPHABETICAL')
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true
                 }
             }
         }
