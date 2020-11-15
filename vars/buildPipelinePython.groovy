@@ -53,7 +53,7 @@ def call() {
         stage('Build environment') {
             steps {
                 sh '''
-                pip3 install -r requirements.txt
+                pip3 install -r requirements.txt --user
                 '''
             }
         }
