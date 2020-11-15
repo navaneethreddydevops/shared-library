@@ -69,10 +69,11 @@ def call() {
                 steps {
                     script {
                         withSonarQubeEnv('SonarQube Server', envOnly: true) {
-                        println ${env.SONAR_HOST_URL}
+                        println ${ env.SONAR_HOST_URL }
                         }
                     }
                 }
+            }
             stage('SonarQube Quality Gate') {
                 steps {
                     script {
@@ -105,25 +106,25 @@ def call() {
             //         }
             // }
 
-            // stage ('Push Docker Image') {
-            //     steps {
-            //         script {
-            //             docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
-            //                 sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
-            //                 sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
-            //             }
-            //         }
-            //     }
-            // }
-            // stage ('Deploy') {
-            //     steps {
-            //         script {
-            //             echo "We are going to deploy ${p.SERVICE_NAME}"
-            //             sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
-            //             sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
-            //         }
-            //     }
-            // }
-            }
+        // stage ('Push Docker Image') {
+        //     steps {
+        //         script {
+        //             docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
+        //                 sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
+        //                 sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
+        //             }
+        //         }
+        //     }
+        // }
+        // stage ('Deploy') {
+        //     steps {
+        //         script {
+        //             echo "We are going to deploy ${p.SERVICE_NAME}"
+        //             sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
+        //             sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
+        //         }
+        //     }
+        // }
         }
     }
+}
