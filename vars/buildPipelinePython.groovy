@@ -73,19 +73,38 @@ def call() {
                     }
                 }
             }
-            stage('Sonarqube') {
-                steps {
-                    script {
-                        withSonarQubeEnv('sonar') {
-                            sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' +
-                            '-f pom.xml ' +
-                            '-Dsonar.projectKey=com.huettermann:all:master ' +
-                            '-Dsonar.language=java ' +
-                            '-Dsonar.sources=. ' +
-                            '-Dsonar.tests=. ' +
-                            '-Dsonar.test.inclusions=**/*Test*/** ' +
-                            '-Dsonar.exclusions=**/*Test*/**'
-                        }
+            stage('Static code metrics') {
+            steps {
+                echo 'Raw metrics'
+                sh  '''
+                    radon raw --json irisvmpy > raw_report.json
+                    radon cc --json irisvmpy > cc_report.json
+                    radon mi --json irisvmpy > mi_report.json
+                    sloccount --duplicates --wide irisvmpy > sloccount.sc
+                    '''
+                echo 'Test coverage'
+                sh  '''
+                    coverage run irisvmpy/iris.py 1 1 2 3
+                    python -m coverage xml -o reports/coverage.xml
+                    '''
+                echo 'Style check'
+                sh  '''
+                    pylint irisvmpy || true
+                    '''
+            }
+            post {
+                always {
+                    step([$class: 'CoberturaPublisher',
+                                   autoUpdateHealth: false,
+                                   autoUpdateStability: false,
+                                   coberturaReportFile: 'reports/coverage.xml',
+                                   failNoReports: false,
+                                   failUnhealthy: false,
+                                   failUnstable: false,
+                                   maxNumberOfBuilds: 10,
+                                   onlyStable: false,
+                                   sourceEncoding: 'ASCII',
+                                   zoomCoverageChart: false])
                     }
                 }
             }
