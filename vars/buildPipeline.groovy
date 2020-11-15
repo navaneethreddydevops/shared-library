@@ -65,6 +65,16 @@ def call() {
                     }
                 }
             }
+        stage('clean') {
+            steps {
+                sh 'mvn clean'
+            }
+        }
+        stage('clean') {
+            steps {
+                sh 'mvn package'
+            }
+        }
             stage('Sonarqube') {
                 steps {
                     script {
