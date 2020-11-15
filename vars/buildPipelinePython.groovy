@@ -53,7 +53,6 @@ def call() {
         stage('Build environment') {
             steps {
                 sh '''
-                python3 -m pip freeze --local > requirements.txt
                 pip3 install -r requirements.txt
                 '''
             }
