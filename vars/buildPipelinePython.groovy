@@ -132,7 +132,6 @@ def call() {
                     cucumber (buildStatus: 'SUCCESS',
                     fileIncludePattern: '**/*.json',
                     jsonReportDirectory: './reports/',
-                    parallelTesting: true,
                     sortingMethod: 'ALPHABETICAL')
                 }
             }
