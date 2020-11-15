@@ -1,5 +1,5 @@
 #!/usr/bin/groovy
-/* groovylint-disable LineLength */
+/* groovylint-disable LineLength, NestedBlockDepth */
 
 def call() {
     def config
@@ -65,41 +65,65 @@ def call() {
                     }
                 }
             }
-            stage('DockerBuildPush') {
+            stage('Sonarqube') {
                 steps {
                     script {
-                        dockerbuildPipeline()
+                        withSonarQubeEnv('SonarQube Server', envOnly: true) {
+                        println ${env.SONAR_HOST_URL}
+                        }
+                    }
+                }
+            stage('SonarQube Quality Gate') {
+                steps {
+                    script {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            def qualitygate = waitForQualityGate()
+                            if (qualitygate.status != 'OK') {
+                                abortPipeline:true
+                                error "Pipeline aborted due to quality gate failure:${qualitygate.status}"
+                            }
+                            else {
+                                echo 'Quality gate passed'
+                            }
+                        }
                     }
                 }
             }
-            stage('Example Deploy') {
-                when {
-                        branch 'production'
-                }
-                    steps {
-                        echo 'Deploying'
-                    }
-            }
+            // stage('DockerBuildPush') {
+            //     steps {
+            //         script {
+            //             dockerbuildPipeline()
+            //         }
+            //     }
+            // }
+            // stage('Example Deploy') {
+            //     when {
+            //             branch 'production'
+            //     }
+            //         steps {
+            //             echo 'Deploying'
+            //         }
+            // }
 
-        // stage ('Push Docker Image') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
-        //                 sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
-        //                 sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
-        //             }
-        //         }
-        //     }
-        // }
-        // stage ('Deploy') {
-        //     steps {
-        //         script {
-        //             echo "We are going to deploy ${p.SERVICE_NAME}"
-        //             sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
-        //             sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
-        //         }
-        //     }
-        // }
+            // stage ('Push Docker Image') {
+            //     steps {
+            //         script {
+            //             docker.withRegistry('https://navaneethreddydevops.com', 'dockerhub') {
+            //                 sh "docker build -t navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER} ."
+            //                 sh "docker push navaneethreddydevops.com/${config.SERVICE_NAME}:${BUILD_NUMBER}"
+            //             }
+            //         }
+            //     }
+            // }
+            // stage ('Deploy') {
+            //     steps {
+            //         script {
+            //             echo "We are going to deploy ${p.SERVICE_NAME}"
+            //             sh "kubectl set image deployment/${p.SERVICE_NAME} ${config.SERVICE_NAME}=opstree/${config.SERVICE_NAME}:${BUILD_NUMBER} "
+            //             sh "kubectl rollout status deployment/${config.SERVICE_NAME} -n ${config.ENVIRONMENT_NAME} "
+            //         }
+            //     }
+            // }
+            }
         }
     }
-}

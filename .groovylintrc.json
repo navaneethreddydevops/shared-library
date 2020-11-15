@@ -4,6 +4,9 @@
         "DuplicateStringLiteral": {
             "enabled": false
         },
+        "Indentation": {
+            "enabled": false
+        },
         "MethodReturnTypeRequired": {
             "enabled": false
         },
