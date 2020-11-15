@@ -76,16 +76,16 @@ def call() {
             stage('Static code metrics') {
             steps {
                 echo 'Raw metrics'
-                sh  '''
-                    radon raw --json irisvmpy > raw_report.json
-                    radon cc --json irisvmpy > cc_report.json
-                    radon mi --json irisvmpy > mi_report.json
-                    sloccount --duplicates --wide irisvmpy > sloccount.sc
-                    '''
+                // sh  '''
+                //     radon raw --json irisvmpy > raw_report.json
+                //     radon cc --json irisvmpy > cc_report.json
+                //     radon mi --json irisvmpy > mi_report.json
+                //     sloccount --duplicates --wide irisvmpy > sloccount.sc
+                //     '''
                 echo 'Test coverage'
                 sh  '''
                     coverage run irisvmpy/iris.py 1 1 2 3
-                    python -m coverage xml -o reports/coverage.xml
+                    python3 -m coverage xml -o reports/coverage.xml
                     '''
                 echo 'Style check'
                 sh  '''
