@@ -118,6 +118,22 @@ def call() {
                 always {
                     // Archive unit tests for the future
                     junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+                    }
+                }
+            }
+            stage('Acceptance tests') {
+            steps {
+                sh  '''
+                    behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
+                    '''
+            }
+            post {
+                always {
+                    cucumber (buildStatus: 'SUCCESS',
+                    fileIncludePattern: '**/*.json',
+                    jsonReportDirectory: './reports/',
+                    parallelTesting: true,
+                    sortingMethod: 'ALPHABETICAL')
                 }
             }
         }
