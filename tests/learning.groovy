@@ -55,3 +55,18 @@ println ''
 // Compiling Groovy code this will generate the classfiles in classes directory
 groovyc -d classes learning.groovy
 
+// Groovy always import these packages by default
+import groovy.lang.*,
+import groovy.util.*,
+import java.lang.*,
+import java.util.*,
+import java.net.*,
+import java.io.*
+
+//Asserions These are used for conditions checks or logic check
+assert(true)
+assert 1 == 1
+def x= 1
+assert x == 1
+def y = 1 ; assert y == 1
+
