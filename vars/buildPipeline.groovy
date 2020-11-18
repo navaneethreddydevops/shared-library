@@ -70,6 +70,12 @@ def call() {
                 sh 'mvn clean'
             }
         }
+        stage('Class-call') {
+            steps {
+                def z = new com.util.Zot()
+                z.checkOutFrom(repo)
+            }
+        }
         stage('package') {
             steps {
                 sh 'mvn package'
